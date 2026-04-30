@@ -21,8 +21,8 @@ Use Python (number idk yet)
 ├── .gitignore                         # Files/folders to be excluded from Git
 └── README.md                          # Current document
 ```
-> **Notes:** `police_data.db` must remain in the `data` folder
+> **Notes:** `police_data.db` must remain in the `data` folder; data not in github because of size
 
 1. 01_load_data.ipynb
 2. 02_clean_database.ipynb
-3.....
+3. ....
