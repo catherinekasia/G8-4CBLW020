@@ -15,7 +15,7 @@ Use Python (number idk yet)
 │
 ├── data_pipeline/
 │   ├── 01_load_data.ipynb                          # Reads LSOA/crime CSVs and saves to DB
-│   └── 02_clean_database.ipynb                     # Cleans the data
+│   └── 02_clean_database.ipynb                     # Contains all pre-processing + cleaning + aggregating etc
 │
 ├── requirements.txt                   # tbd
 ├── .gitignore                         # Files/folders to be excluded from Git
