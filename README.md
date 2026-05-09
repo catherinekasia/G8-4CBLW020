@@ -1,6 +1,6 @@
 # G8-4CBLW020
 **Group 8 work for DBL**  
-Use Python (number idk yet)
+Use Python 3.11
 
 
 ## Structure
@@ -26,3 +26,15 @@ Use Python (number idk yet)
 1. 01_load_data.ipynb
 2. 02_clean_database.ipynb
 3. ....
+
+## Environment Setup Instructions
+Create a virtual environment to install packages + dependencies 
+
+`conda create -n 4CBL python=3.11 -y`
+
+`conda activate 4CBL`
+
+`pip install -r requirements.txt`
+
+==> always use this environment while working on project
+
