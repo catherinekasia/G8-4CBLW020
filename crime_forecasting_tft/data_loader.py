@@ -26,11 +26,11 @@ def load_panel(db_path: str, prototype_pfa: str | None = None) -> pd.DataFrame:
         lm.month,
         lm.crime_type,
         lm.crime_count,
-        lm."3mo_ra",
-        lm."6mo_ra",
-        lm."12mo_diff_safe",
+        lm."3mo_ra"          AS ra_3mo,
+        lm."6mo_ra"          AS ra_6mo,
+        lm."12mo_diff_safe"  AS diff_12mo,
         lm.spatial_lag,
-        d.pop,
+        d.pop AS population,
         d.econ_score,
         d.infrastructure_score,
         d.health_score,
@@ -42,7 +42,11 @@ def load_panel(db_path: str, prototype_pfa: str | None = None) -> pd.DataFrame:
         COALESCE(inf.police_station_count, 0) AS police_station_count,
         m.days_in_month,
         m.season,
-        m.holiday_count
+        m.holiday_count,
+        w.tmax,
+        w.tmin,
+        w.rain,
+        w.af
     FROM lsoa_month            lm
     JOIN lsoa_demographics     d   USING (lsoa_code)
     JOIN lsoa_info             i   USING (lsoa_code)

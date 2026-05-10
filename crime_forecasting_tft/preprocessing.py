@@ -16,6 +16,9 @@ df["month_of_year"] = df["month"].dt.month.astype(str).astype("category")
 #no clue what this does but in tutorial they log-transform the target for the encoder
 df["log_crime_count"] = np.log(df["crime_count"] + 1e-8)
 
+#PyTorch normalizers require continuous/floating-point data, not integers
+df["crime_count"] = df["crime_count"].astype(float)
+
 #changing to string format then to category
 for c in ["lsoa_code", "crime_type", "pfa_code", "loc_auth_code", "season"]:
     df[c] = df[c].astype(str).astype("category")
@@ -37,7 +40,7 @@ df["spatial_lag"] = df["spatial_lag"].fillna(0.0)
 #confirm no nulls
 feature_cols = [
     "crime_count", "log_crime_count", "ra_3mo", "ra_6mo", "diff_12mo", "spatial_lag",
-    "pop", "econ_score", "infrastructure_score", "health_score",
+    "population", "econ_score", "infrastructure_score", "health_score",
     "percent_working", "percent_child", "percent_old", "police_station_count",
     "days_in_month", "holiday_count",
 ]
