@@ -6,10 +6,11 @@ geopandas>=0.14.0
 libpysal>=4.8.0
 folium>=0.15.0
 
-torch>=2.0.0
-torchvision
-torchaudio
-pytorch-lightning>=2.0.0
+#DO NOT TOUCH TORCH VERSION
+torch==2.5.1
+torchvision==0.20.1
+torchaudio==2.5.1
+lightning>=2.0.0
 pytorch-forecasting>=1.0.0
 
 optuna
