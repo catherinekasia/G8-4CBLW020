@@ -38,3 +38,13 @@ Create a virtual environment to install packages + dependencies
 
 ==> always use this environment while working on project
 
+## TFT Info
+
+`config.py` contains all configuration steps (batch size, seed, prediction length, etc)
+
+`data_loader.py` contains loading all data into dataframe
+
+`preprocessing.py` compute time index, ensure all cols in correct data format, null handling
+
+
+
