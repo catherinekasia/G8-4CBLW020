@@ -9,3 +9,5 @@ data/
 .html
 
 .vscode/
+
+__pycache__/
