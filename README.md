@@ -24,13 +24,19 @@ Use Python 3.11
 │
 ├── data_pipeline/
 │   ├── 01_load_data.ipynb                          # Reads LSOA/crime CSVs and saves to DB
-│   └── 02_clean_database.ipynb                     # Contains all pre-processing + cleaning + aggregating etc
+│   ├── 02_clean_street_crimes.ipynb                # Drops rows, applies new crime types, checks for missing LSOAs, creates lsoa_month
+│   ├── 03_clean_other_tables.ipynb                 # Creates month_info table, fixes lsoa_demographics, fixes lsoa_info
+│   ├── 04_derived_attributes.ipynb                 # RA, diff, and spatial lag feature creation
+│   ├── 05_prelim_graphs.ipynb                      # raw crime counts, outlier count detection
+│   └── pstation_collection.ipynb                   # police station collection
 │
-├── requirements.txt                   # Libraries used
+├── retired/                           # Old code not ready to be deleted
 ├── .gitignore                         # Files/folders to be excluded from Git
-└── README.md                          # Current document
+├── README.md                          # Current document
+├── requirements.txt                   # Libraries used
+└── test.py                            
 ```
-> **Notes:** File reorganization in process; `police_data.db` must remain in the `data` folder; data not in github because of size
+> **Notes:** `police_data.db` must remain in the `data` folder; data not in github because of size
 
 1. 01_load_data.ipynb
 2. 02_clean_database.ipynb
