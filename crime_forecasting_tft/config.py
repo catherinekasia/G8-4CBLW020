@@ -52,7 +52,7 @@ max_encoder_length = 24
 #prediction length
 max_prediction_length = 3    # 6-month horizon (matches tutorial)
 
-batch_size = 128
+batch_size = 1024
 
 #seed is to make sure we can reproduce results; pylance has function seed_everything(got from tutorial need to confirm it works)
 pl.seed_everything(27)

@@ -39,7 +39,7 @@ trainer = pl.Trainer(
 tft = TemporalFusionTransformer.from_dataset(
     training,
     #replace with tuned value
-    learning_rate=0.03,
+    learning_rate=6.918309709189363e-06,
     #hidden_size is the size of the hidden layers in the model; larger values can capture more complex patterns, we have more data so more
     hidden_size=64,
     #attention_head_size is the number of attention heads in the multi-head attention mechanism; more heads can allow the model to focus on different parts of the input, but also increases computational cost, so we can start with a smaller number and tune up if needed

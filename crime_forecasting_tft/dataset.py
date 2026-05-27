@@ -83,5 +83,5 @@ validation = TimeSeriesDataSet.from_dataset(
 #batch size should eventually be tuned; using smaller batch size for training and larger for validation/test is a common practice to balance memory constraints with evaluation speed
 #num_workers does parallel data loading; persistent_workers keeps the worker processes alive between epochs, which can speed up training if the dataset is large and loading is a bottleneck;; 
 #Don't use multiple workers on personal computer unless it's beefy
-train_dataloader = training.to_dataloader(train=True,  batch_size=batch_size,     num_workers=0)
-val_dataloader   = validation.to_dataloader(train=False, batch_size=batch_size*4, num_workers=0)
+train_dataloader = training.to_dataloader(train=True,  batch_size=batch_size,     num_workers=4, persistent_workers=True)
+val_dataloader   = validation.to_dataloader(train=False, batch_size=batch_size*4, num_workers=4, persistent_workers=True)

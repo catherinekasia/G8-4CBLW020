@@ -12,10 +12,9 @@ from pytorch_forecasting import TemporalFusionTransformer
 
 from dataset import training, validation, val_dataloader
 from preprocessing import df
-from config import max_prediction_length
+from config import max_prediction_length, latest_checkpoint
 
-#hardcoded bc i dont like errors
-CKPT_PATH = "lightning_logs/tft_crime/version_9/checkpoints/epoch=15-step=24368.ckpt"
+CKPT_PATH = latest_checkpoint()
 
 #claude! training was done on snellius with cuda, but inference is on a mac without cuda, so we need to make sure all tensors 
 #load onto cpu
