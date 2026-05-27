@@ -1,10 +1,15 @@
+import torch
 import lightning.pytorch as pl
 from pytorch_forecasting import TemporalFusionTransformer
 from pytorch_forecasting.metrics import QuantileLoss
 from dataset import training, train_dataloader, val_dataloader
+from config import learning_rate
 
 from lightning.pytorch.callbacks import EarlyStopping, LearningRateMonitor
 from lightning.pytorch.loggers import TensorBoardLogger
+
+# TF32 on Ampere/Hopper GPUs (Snellius): same accuracy as FP32, up to 8x faster matmuls
+torch.set_float32_matmul_precision("high")
 
 early_stop = EarlyStopping(
     monitor="val_loss", min_delta=1e-4, patience=10, mode="min", verbose=False,
@@ -38,8 +43,7 @@ trainer = pl.Trainer(
 
 tft = TemporalFusionTransformer.from_dataset(
     training,
-    #replace with tuned value
-    learning_rate=6.918309709189363e-06,
+    learning_rate=learning_rate,
     #hidden_size is the size of the hidden layers in the model; larger values can capture more complex patterns, we have more data so more
     hidden_size=64,
     #attention_head_size is the number of attention heads in the multi-head attention mechanism; more heads can allow the model to focus on different parts of the input, but also increases computational cost, so we can start with a smaller number and tune up if needed

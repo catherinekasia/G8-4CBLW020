@@ -1,5 +1,5 @@
 from preprocessing import df
-from config import max_prediction_length, max_encoder_length, batch_size
+from config import max_prediction_length, max_encoder_length, batch_size, num_workers, pin_memory
 from pytorch_forecasting import TimeSeriesDataSet
 from pytorch_forecasting.data import GroupNormalizer
 
@@ -83,5 +83,9 @@ validation = TimeSeriesDataSet.from_dataset(
 #batch size should eventually be tuned; using smaller batch size for training and larger for validation/test is a common practice to balance memory constraints with evaluation speed
 #num_workers does parallel data loading; persistent_workers keeps the worker processes alive between epochs, which can speed up training if the dataset is large and loading is a bottleneck;; 
 #Don't use multiple workers on personal computer unless it's beefy
-train_dataloader = training.to_dataloader(train=True,  batch_size=batch_size,     num_workers=4, persistent_workers=True)
-val_dataloader   = validation.to_dataloader(train=False, batch_size=batch_size*4, num_workers=4, persistent_workers=True)
+_dl_kwargs = dict(num_workers=num_workers, pin_memory=pin_memory)
+if num_workers > 0:
+    _dl_kwargs.update(persistent_workers=True, prefetch_factor=2)
+
+train_dataloader = training.to_dataloader(train=True,  batch_size=batch_size,     **_dl_kwargs)
+val_dataloader   = validation.to_dataloader(train=False, batch_size=batch_size*4, **_dl_kwargs)
