@@ -29,6 +29,17 @@ torch.serialization.add_safe_globals([GroupNormalizer])
 
 db_path = "./data/police_data.db"
 
+_LOG_DIR = "lightning_logs/tft_crime"
+
+
+def latest_checkpoint() -> str:
+    """Return the most recently modified checkpoint in the training log dir."""
+    import glob, os
+    matches = glob.glob(f"{_LOG_DIR}/*/checkpoints/*.ckpt")
+    if not matches:
+        raise FileNotFoundError(f"No checkpoint found under {_LOG_DIR}/")
+    return max(matches, key=os.path.getmtime)
+
 #turn to false to run on all police forces
 prototype = True
 

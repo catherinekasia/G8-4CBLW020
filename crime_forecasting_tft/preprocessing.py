@@ -38,12 +38,21 @@ df["ra_6mo"]   = df["ra_6mo"].fillna(0.0)
 df["diff_12mo"] = df["diff_12mo"].fillna(0.0)
 df["spatial_lag"] = df["spatial_lag"].fillna(0.0)
 
+n_weather_nan = df[["tmax", "tmin", "rain", "af"]].isna().sum().sum()
+if n_weather_nan > 0:
+    print(f"WARNING: {n_weather_nan} NULL weather values (likely NULL-pfa_code LSOAs) — filling with 0")
+df["tmax"] = df["tmax"].fillna(0.0)
+df["tmin"] = df["tmin"].fillna(0.0)
+df["rain"] = df["rain"].fillna(0.0)
+df["af"]   = df["af"].fillna(0.0)
+
 #confirm no nulls
 feature_cols = [
     "crime_count", "log_crime_count", "ra_3mo", "ra_6mo", "diff_12mo", "spatial_lag",
     "population", "econ_score", "infrastructure_score", "health_score",
     "percent_working", "percent_child", "percent_old", "police_station_count",
     "days_in_month", "holiday_count",
+    "tmax", "tmin", "rain", "af",
 ]
 assert df[feature_cols].isna().sum().sum() == 0
 
