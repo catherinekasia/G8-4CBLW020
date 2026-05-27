@@ -13,15 +13,16 @@ df["time_idx"] = df["time_idx"].astype(int)
 #adding month of year to add more seasonality info
 df["month_of_year"] = df["month"].dt.month.astype(str).astype("category")
 
-#no clue what this does but in tutorial they log-transform the target for the encoder
-df["log_crime_count"] = np.log(df["crime_count"] + 1e-8)
+# log1p maps 0 → 0 cleanly; avoids the large negative values log(x + 1e-8) gives for zero-crime months
+df["log_crime_count"] = np.log1p(df["crime_count"]).astype("float32")
 
 #PyTorch normalizers require continuous/floating-point data, not integers
-df["crime_count"] = df["crime_count"].astype(float)
+df["crime_count"] = df["crime_count"].astype("float32")
 
-#changing to string format then to category
+# data_loader already converted these to category; astype("category") is a no-op if already set
 for c in ["lsoa_code", "crime_type", "pfa_code", "loc_auth_code", "season"]:
-    df[c] = df[c].astype(str).astype("category")
+    if df[c].dtype.name != "category":
+        df[c] = df[c].astype("category")
 
 #sorting by lsoa_code, crime_type, time_idx to make sure all rows for a given series are together and in order
 df = df.sort_values(["lsoa_code", "crime_type", "time_idx"]).reset_index(drop=True)
