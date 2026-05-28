@@ -21,6 +21,7 @@ Usage:
 
 import sys
 import sqlite3
+from pathlib import Path
 import geopandas as gpd
 import pandas as pd
 
@@ -28,9 +29,10 @@ DRY_RUN = "--dry-run" in sys.argv
 if DRY_RUN:
     print("=== DRY RUN — no changes will be committed ===\n")
 
-DB_PATH      = "../data/police_data.db"
-SHP_2011     = "../data/LSOA_2011/LSOA_2011_EW_BFC_V3.shp"
-GEOJSON_2021 = "../data/lsoa_spatial.geojson"
+_DATA = Path(__file__).resolve().parent.parent / "data"
+DB_PATH      = str(_DATA / "police_data.db")
+SHP_2011     = str(_DATA / "LSOA_2011" / "LSOA_2011_EW_BFC_V3.shp")
+GEOJSON_2021 = str(_DATA / "lsoa_spatial.geojson")
 
 print("Connecting to database ...")
 conn = sqlite3.connect(DB_PATH)
