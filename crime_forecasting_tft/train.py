@@ -17,29 +17,29 @@ early_stop = EarlyStopping(
 lr_logger = LearningRateMonitor()
 logger = TensorBoardLogger("lightning_logs", name="tft_crime")
 
-trainer = pl.Trainer(
-    max_epochs=50,
-    #this is for apple silicon gpu, edit to match hardware as necessary
-    accelerator="mps",
-    #when on super computer bump up devices
-    devices=1,
-    enable_model_summary=True,
-    gradient_clip_val=0.1,
-    callbacks=[lr_logger, early_stop],
-    logger=logger,
-    # limit_train_batches=50,  #uncomment for fast iteration during dev
-)
-
 # trainer = pl.Trainer(
 #     max_epochs=50,
-#     accelerator="gpu",
-#     devices=4,
-#     strategy="ddp_find_unused_parameters_true",
-#     precision="bf16-mixed",
+#     #this is for apple silicon gpu, edit to match hardware as necessary
+#     accelerator="mps",
+#     #when on super computer bump up devices
+#     devices=1,
+#     enable_model_summary=True,
 #     gradient_clip_val=0.1,
 #     callbacks=[lr_logger, early_stop],
 #     logger=logger,
+#     # limit_train_batches=50,  #uncomment for fast iteration during dev
 # )
+
+trainer = pl.Trainer(
+    max_epochs=50,
+    accelerator="gpu",
+    devices=4,
+    strategy="ddp_find_unused_parameters_true",
+    precision="bf16-mixed",
+    gradient_clip_val=0.1,
+    callbacks=[lr_logger, early_stop],
+    logger=logger,
+)
 
 tft = TemporalFusionTransformer.from_dataset(
     training,

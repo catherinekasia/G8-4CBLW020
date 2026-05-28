@@ -46,16 +46,16 @@ def latest_checkpoint() -> str:
     return max(matches, key=_key)
 
 #turn to false to run on all police forces
-prototype = True
+prototype = False
 
 #this is london
 prototype_pfa = "E23000001"
 
 #context length
-max_encoder_length = 24
+max_encoder_length = 36
 
 #prediction length
-max_prediction_length = 3    # 6-month horizon (matches tutorial)
+max_prediction_length = 3    # 3-month horizon
 
 batch_size = 1024
 
@@ -63,7 +63,7 @@ batch_size = 1024
 num_workers = 4
 
 # True on Snellius (CUDA) — speeds up CPU→GPU transfers; False for MPS/CPU
-pin_memory = False
+pin_memory = True
 
 learning_rate = 6.918309709189363e-06
 
