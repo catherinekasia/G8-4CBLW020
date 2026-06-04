@@ -20,3 +20,5 @@ lightning_logs/
 
 plots/
 data_pipeline/uk_police_stations_2026.html
+
+allocation/outputs/
