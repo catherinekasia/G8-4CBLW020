@@ -25,4 +25,3 @@ scikit-learn>=1.2.0
 #DASHBOARD
 ipyleaflet
 plotly
-"anywidget[dev]"
