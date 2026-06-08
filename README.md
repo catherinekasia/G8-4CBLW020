@@ -51,6 +51,8 @@ Create a virtual environment to install packages + dependencies
 
 `pip install -r requirements.txt`
 
+`pip install "anywidget[dev]"`
+
 ==> always use this environment while working on project
 > note: do NOT use pytorch 2.6 b/c of the new security feature (if you do straight pip install torch it'll be 2.6, only use requirements.txt)
 
