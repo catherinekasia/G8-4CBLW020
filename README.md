@@ -6,6 +6,11 @@ Use Python 3.11
 ## Structure
 
 ```
+├── allocation
+│   ├── 01_load_data.ipynb
+│   ├── 02_workforce_capacity.ipynb
+│   └── 03_allocation_v1.ipynb
+│
 ├── data/
 │   ├── raw/
 │   │   ├── 2025_all_iod_scores_ranks_deciles.csv
