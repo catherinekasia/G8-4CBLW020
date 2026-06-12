@@ -34,11 +34,10 @@ _DTYPE_MAP: dict[str, str] = {
 
 def load_panel(db_path: str, prototype_pfa: str | None = None) -> pd.DataFrame:
     '''
-    Input: path to database, optional PFA name for prototyping
-    Output: panel dataframe with one row per LSOA × crime_type × month
+    :param db_path: path to SQLite database containing the joined data
+    :param prototype_pfa: if not None, only load data for this PFA
 
-    Following tutorial, need to load the data into a single panel dataframe with one row per
-    LSOA × crime_type × month. This is the format expected by TFT.
+    Following tutorial, need to load the data into a single panel dataframe with one row per unit of analysis
 
     Join notes (verified):
     - lsoa_demographics and lsoa_info each have exactly one row per lsoa_code — no fan-out.
@@ -46,6 +45,8 @@ def load_panel(db_path: str, prototype_pfa: str | None = None) -> pd.DataFrame:
     - lsoa_infrastructure covers only 1369 LSOAs (police stations); the LEFT JOIN + COALESCE
       fills the rest with 0.
     - pfa_weather: LEFT JOIN because some months/PFAs may have no weather record.
+
+    :returns: panel dataframe with one row per LSOA × crime_type × month, with appropriate dtypes for memory efficiency
     '''
     con = sqlite3.connect(db_path)
 
@@ -108,10 +109,10 @@ def load_panel(db_path: str, prototype_pfa: str | None = None) -> pd.DataFrame:
 
 df = load_panel(db_path, prototype_pfa=prototype_pfa if prototype else None)
 
+#manual inspection to ensure everything is fine
 print(
-    f"{len(df)} rows | "
-    f"{df['lsoa_code'].nunique()} LSOAs | "
-    f"{df['crime_type'].nunique()} crime types | "
-    f"{df['month'].nunique()} months | "
-    f"~{df.memory_usage(deep=True).sum() / 1e6:.0f} MB"
-)
+    f"{len(df)} rows;"
+    f"{df['lsoa_code'].nunique()} LSOAs;"
+    f"{df['crime_type'].nunique()} crime types; "
+    f"{df['month'].nunique()} months; "
+    f"~{df.memory_usage(deep=True).sum() / 1e6:.0f} MB")

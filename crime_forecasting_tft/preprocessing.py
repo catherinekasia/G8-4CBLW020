@@ -1,25 +1,26 @@
 import pandas as pd
 import numpy as np
 from pathlib import Path
-from config import prototype, prototype_pfa
+from config import prototype, prototype_pfa, db_path as _db_path
+from data_loader import df 
 
-_pfa_tag = prototype_pfa if prototype else "full"
+_db_tag = Path(_db_path).stem
+_pfa_tag = prototype_pfa if prototype else _db_tag
 _CACHE = Path(f"data/panel_{_pfa_tag}.parquet")
 
 if _CACHE.exists():
-    print(f"Loading preprocessed panel from cache ({_CACHE}) — delete file to rebuild from DB")
+    print(f"loading panel from cache ({_CACHE})")
     df = pd.read_parquet(_CACHE)
 else:
-    from data_loader import df  # runs the SQL query only when cache is missing
 
-    # month is "YYYY-MM" string -> a pandas Period -> integer offset from minimum
-    # .astype(str) breaks the Categorical dtype before pd.to_datetime, otherwise pandas 2.x
-    # preserves Categorical and the column can't round-trip through parquet correctly
-    #thanks claude
+    #if month is already a string, pd.to_datetime will still work, and if it's already a Period, it will also still work, so this is safe either way
     df["month"] = pd.to_datetime(df["month"].astype(str), format="%Y-%m")
+    #time_idx is months since the earliest month in the dataset
     df["time_idx"] = ((df["month"].dt.year - df["month"].dt.year.min()) * 12
                      + (df["month"].dt.month - 1))
-    df["time_idx"] -= df["time_idx"].min()  # start at 0
+    #making sure it starts at 0
+    df["time_idx"] -= df["time_idx"].min()
+    #take it to an int to ensure not a float
     df["time_idx"] = df["time_idx"].astype(int)
 
     #adding month of year to add more seasonality info
@@ -44,18 +45,19 @@ else:
     assert series_lens.nunique() == 1, "Series have unequal lengths — check zero-padding"
 
     #this should be eventually deleted as the data from before rolling averages should be dropped, but not ready to do that yet
+    #(Keeping this despite not needing this anymore)
     df["ra_3mo"]   = df["ra_3mo"].fillna(0.0)
     df["ra_6mo"]   = df["ra_6mo"].fillna(0.0)
     df["diff_12mo"] = df["diff_12mo"].fillna(0.0)
     df["spatial_lag"] = df["spatial_lag"].fillna(0.0)
 
+    #setting up weather to ensure no nulls
     n_weather_nan = df[["tmax", "tmin", "rain", "af"]].isna().sum().sum()
-    if n_weather_nan > 0:
-        print(f"WARNING: {n_weather_nan} NULL weather values (likely NULL-pfa_code LSOAs) — filling with 0")
     df["tmax"] = df["tmax"].fillna(0.0)
     df["tmin"] = df["tmin"].fillna(0.0)
     df["rain"] = df["rain"].fillna(0.0)
     df["af"]   = df["af"].fillna(0.0)
+    print(f'weather nulls: {n_weather_nan}')
 
     #confirm no nulls
     feature_cols = [
@@ -68,5 +70,5 @@ else:
     assert df[feature_cols].isna().sum().sum() == 0
 
     df.to_parquet(_CACHE)
-    print(f"Saved preprocessed panel to {_CACHE}")
+    print(f"saved preprocessed panel to {_CACHE}")
 

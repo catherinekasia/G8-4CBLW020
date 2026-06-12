@@ -22,23 +22,22 @@ from pytorch_forecasting import (
 )
 from pytorch_forecasting.data import GroupNormalizer
 from pytorch_forecasting.metrics import MAE, SMAPE, QuantileLoss, PoissonLoss
-
+import glob, re
 #pytorch 2.6
 torch.serialization.add_safe_globals([GroupNormalizer])
 
 
-db_path = "./data/police_data.db"
+db_path = "./data/wales_data.db"
 
 _LOG_DIR = "lightning_logs/tft_crime"
 
 
 def latest_checkpoint() -> str:
-    """Return checkpoint with the highest version then highest step — more reliable than mtime,
-    which can be clobbered when rsyncing checkpoints from a cluster."""
-    import glob, re
+    '''
+    Returns the latest checkpoint in the log directory, for training/evaluation
+    :returns: Path to latest checkpoint
+    '''
     matches = glob.glob(f"{_LOG_DIR}/*/checkpoints/*.ckpt")
-    if not matches:
-        raise FileNotFoundError(f"No checkpoint found under {_LOG_DIR}/")
     def _key(p):
         ver  = re.search(r"version_(\d+)", p)
         step = re.search(r"step=(\d+)",    p)
@@ -54,18 +53,22 @@ prototype_pfa = "E23000001"
 #context length
 max_encoder_length = 36
 
-#prediction length
-max_prediction_length = 3    # 3-month horizon
+#prediction length (horizon)
+max_prediction_length = 3
 
-batch_size = 1024
+#256 for wales bc training on mac; 16,384 for snellius english data
+batch_size = 256
 
-# set to 0 on a weak personal machine; 4 is fine for Mac/Snellius
-num_workers = 4
+# set to 0 on a weak personal machine; 4 is fine for mac/snellius
+num_workers = 2
 
-# True on Snellius (CUDA) — speeds up CPU→GPU transfers; False for MPS/CPU
-pin_memory = True
+#true on snellius, false on mac
+pin_memory = False
 
-learning_rate = 6.918309709189363e-06
+learning_rate = 4.073802778041128e-05
+
+# England learning rate: 6.918309709189363e-06
+# Wales learning rate: 4.073802778041128e-05
 
 #seed is to make sure we can reproduce results; pylance has function seed_everything(got from tutorial need to confirm it works)
 pl.seed_everything(27)

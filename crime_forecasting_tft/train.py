@@ -3,43 +3,45 @@ import lightning.pytorch as pl
 from pytorch_forecasting import TemporalFusionTransformer
 from pytorch_forecasting.metrics import QuantileLoss
 from dataset import training, train_dataloader, val_dataloader
-from config import learning_rate
+from config import learning_rate, latest_checkpoint
 
 from lightning.pytorch.callbacks import EarlyStopping, LearningRateMonitor
 from lightning.pytorch.loggers import TensorBoardLogger
 
-# TF32 on Ampere/Hopper GPUs (Snellius): same accuracy as FP32, up to 8x faster matmuls
-torch.set_float32_matmul_precision("high")
+# speed up snellius
+# torch.set_float32_matmul_precision("high")
 
+#early stopping to prevent overfitting; patience is how many epochs to wait after last improvement before stopping, 
+#min_delta is minimum change in the monitored quantity to qualify as an improvement
 early_stop = EarlyStopping(
     monitor="val_loss", min_delta=1e-4, patience=10, mode="min", verbose=False,
 )
 lr_logger = LearningRateMonitor()
 logger = TensorBoardLogger("lightning_logs", name="tft_crime")
 
-# trainer = pl.Trainer(
-#     max_epochs=50,
-#     #this is for apple silicon gpu, edit to match hardware as necessary
-#     accelerator="mps",
-#     #when on super computer bump up devices
-#     devices=1,
-#     enable_model_summary=True,
-#     gradient_clip_val=0.1,
-#     callbacks=[lr_logger, early_stop],
-#     logger=logger,
-#     # limit_train_batches=50,  #uncomment for fast iteration during dev
-# )
-
 trainer = pl.Trainer(
     max_epochs=50,
-    accelerator="gpu",
-    devices=4,
-    strategy="ddp_find_unused_parameters_true",
-    precision="bf16-mixed",
+    #this is for apple silicon gpu, edit to match hardware as necessary
+    accelerator="mps",
+    #when on super computer bump up devices
+    devices=1,
+    enable_model_summary=True,
     gradient_clip_val=0.1,
     callbacks=[lr_logger, early_stop],
     logger=logger,
+    # limit_train_batches=50,  #uncomment for fast iteration during dev
 )
+
+# trainer = pl.Trainer(
+#     max_epochs=50,
+#     accelerator="gpu",
+#     devices=4,
+#     strategy="ddp_find_unused_parameters_true",
+#     precision="bf16-mixed",
+#     gradient_clip_val=0.1,
+#     callbacks=[lr_logger, early_stop],
+#     logger=logger,
+# )
 
 tft = TemporalFusionTransformer.from_dataset(
     training,
@@ -64,9 +66,17 @@ tft = TemporalFusionTransformer.from_dataset(
 
 ##tensorboard --logdir=lightning_logs
 
+
+#resume training where appropriate
 if __name__ == "__main__":
+    try:
+        ckpt = latest_checkpoint()
+        print(f"resuming from {ckpt}")
+    except FileNotFoundError:
+        ckpt = None
     trainer.fit(
         tft,
         train_dataloaders=train_dataloader,
         val_dataloaders=val_dataloader,
+        ckpt_path=ckpt,
     )
