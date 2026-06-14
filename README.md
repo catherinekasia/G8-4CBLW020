@@ -11,7 +11,7 @@ pip install -r requirements.txt
 pip install "anywidget[dev]"
 ```
 
-> Always use the `4CBL` environment. Do **not** run `pip install torch` directly — it will pull PyTorch 2.6 which has a breaking security change; install from `requirements.txt` only.
+> Always use the `4CBL` environment. Do NOT run `pip install torch` b/c it will pull PyTorch 2.6 which has a breaking security change
 
 ## Structure
 
