@@ -30,8 +30,7 @@ pip install "anywidget[dev]"
 │   ├── train.py                        # Runs the full training pipeline
 │   ├── evaluate.py                     # Evaluation scripts
 │   ├── collect_test_predictions.py     # Runs inference and writes predictions to CSV
-│   ├── plot_horizon_mae.py             # MAE by horizon + MAE vs crime volume scatter
-│   └── hypertune.py                    # Hyperparameter search (in progress)
+│   └── tbd
 │
 ├── data/
 │   ├── raw/
@@ -56,7 +55,7 @@ pip install "anywidget[dev]"
 
 ## Data
 
-The data folder is available at [___]. Place it unchanged into `G8-4CBLW020/`. 
+The data folder is available at [https://tuenl-my.sharepoint.com/:f:/g/personal/a_bekesi_student_tue_nl/IgAwp8xMiJRlR5tPSwWYgYh2AXXqx2UuGWakbt29Lwx6FZo?e=8DEoEp]. Place it unchanged into `G8-4CBLW020/`. 
 
 ## Running the Pipeline
 
