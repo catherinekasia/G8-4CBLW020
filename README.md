@@ -11,21 +11,21 @@ Use Python 3.11
 │   ├── 02_workforce_capacity.ipynb
 │   └── 03_allocation_v1.ipynb
 │
+├── crime_forecasting_tft/
+│   ├── collect_test_predictions.py                 # 
+│   ├── config.py                                   # Configuration (batch size, etc)
+│   ├── data_loader.py                              # Getting raw data out of db and into df
+│   ├── dataset.py                                  # TimeSeriesDataSet
+│   ├── evaluate.py                                 # Evaluation scripts
+│   ├── model.py                                    # Architecture
+│   ├── preprocessing.py                            # Formatting for pytorch
+│   └── train.py                                    # Training
+│
 ├── data/
 │   ├── raw/
 │   │   ├── 2025_all_iod_scores_ranks_deciles.csv
 │   │   └── uk_police_downloads/
 │   └── police_data.db
-│
-├── crime_forecasting_tft/
-│   ├── config.py                                   # Config steps (batch size etc)
-│   ├── data_loader.py                              # Getting raw data out of db and into df
-│   ├── dataset.py                                  # TimeSeriesDataSet
-│   ├── evaluate.py                                 # Evaluation scripts
-│   ├── hypertune.py                               #in progress
-│   ├── model.py                                    # Architecture
-│   ├── preprocessing.py                            # Formatting for pytorch
-│   └── train.py                                    # Training
 │
 ├── data_pipeline/
 │   ├── 01_load_data.ipynb                          # Reads LSOA/crime CSVs and saves to DB
@@ -43,10 +43,6 @@ Use Python 3.11
 ```
 > **Notes:** `police_data.db` must remain in the `data` folder; data not in github because of size
 
-1. 01_load_data.ipynb
-2. 02_clean_database.ipynb
-3. ....
-
 ## Environment Setup Instructions
 Create a virtual environment to install packages + dependencies 
 
@@ -60,6 +56,35 @@ Create a virtual environment to install packages + dependencies
 
 ==> always use this environment while working on project
 > note: do NOT use pytorch 2.6 b/c of the new security feature (if you do straight pip install torch it'll be 2.6, only use requirements.txt)
+
+## Data Setup + Usage Instructions
+
+The data relevant to all parts of the project is available within ____. Place the data folder unchanged into G8-4CBLW020 File. The following subsection contains the order in which to run the files from start to finish of the recommendation pipeline detailed within the technical report.
+
+data_pipeline/:
+England and Wales are two separate databases already provided within the link above. Each notebook contains high-level summaries on what is done within each file. To run the full data pipeline from scratch the following must be ran:
+1. Create_weather_dataset.ipynb
+2. 01_load_data.ipynb
+3. 01_load_data_Wales.ipynb
+4. 02_clean_street_crimes.ipynb
+5. 02_clean_street_crimes_Wales.ipynb
+6. 03_clean_other_tables.ipynb
+7. 03_clean_other_tables_Wales.ipynb
+8. 04_derived_attributes.ipynb
+9. 04_derived_attributes_Wales.ipynb
+10. pstation_collection.ipynb
+11. pstation_collection_Wales.ipynb
+
+crime_forecasting_tft/:
+1. model.py -> obtain optimal initial learning rate
+2. train.py -> begin training
+3. collect_test_predictions.py -> collect final inference on both England and Wales
+
+allocation/:
+1. 01_load_data.ipynb
+2. 02_workforce_capacity.ipynb
+3. 03_allocation_v1.ipynb
+
 
 ## TFT Info
 
