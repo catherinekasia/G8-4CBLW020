@@ -1,107 +1,83 @@
 # G8-4CBLW020
-**Group 8 work for DBL**  
+Group 8 work for CBL
 Use Python 3.11
 
+## Setup
+
+```bash
+conda create -n 4CBL python=3.11 -y
+conda activate 4CBL
+pip install -r requirements.txt
+pip install "anywidget[dev]"
+```
+
+> Always use the `4CBL` environment. Do **not** run `pip install torch` directly — it will pull PyTorch 2.6 which has a breaking security change; install from `requirements.txt` only.
 
 ## Structure
 
 ```
-├── allocation
+├── allocation/
 │   ├── 01_load_data.ipynb
 │   ├── 02_workforce_capacity.ipynb
 │   └── 03_allocation_v1.ipynb
 │
 ├── crime_forecasting_tft/
-│   ├── collect_test_predictions.py                 # 
-│   ├── config.py                                   # Configuration (batch size, etc)
-│   ├── data_loader.py                              # Getting raw data out of db and into df
-│   ├── dataset.py                                  # TimeSeriesDataSet
-│   ├── evaluate.py                                 # Evaluation scripts
-│   ├── model.py                                    # Architecture
-│   ├── preprocessing.py                            # Formatting for pytorch
-│   └── train.py                                    # Training
+│   ├── config.py                       # Batch size, seed, prediction length, etc.
+│   ├── data_loader.py                  # Reads raw data from SQLite DB into a DataFrame
+│   ├── dataset.py                      # TimeSeriesDataSet and DataLoaders
+│   ├── preprocessing.py                # Time index, dtype coercion, null handling
+│   ├── model.py                        # TFT architecture
+│   ├── train.py                        # Runs the full training pipeline
+│   ├── evaluate.py                     # Evaluation scripts
+│   ├── collect_test_predictions.py     # Runs inference and writes predictions to CSV
+│   ├── plot_horizon_mae.py             # MAE by horizon + MAE vs crime volume scatter
+│   └── hypertune.py                    # Hyperparameter search (in progress)
 │
 ├── data/
 │   ├── raw/
 │   │   ├── 2025_all_iod_scores_ranks_deciles.csv
 │   │   └── uk_police_downloads/
-│   └── police_data.db
+│   └── police_data.db 
 │
 ├── data_pipeline/
-│   ├── 01_load_data.ipynb                          # Reads LSOA/crime CSVs and saves to DB
-│   ├── 02_clean_street_crimes.ipynb                # Drops rows, applies new crime types, checks for missing LSOAs, creates lsoa_month
-│   ├── 03_clean_other_tables.ipynb                 # Creates month_info table, fixes lsoa_demographics, fixes lsoa_info
-│   ├── 04_derived_attributes.ipynb                 # RA, diff, and spatial lag feature creation
-│   ├── 05_prelim_graphs.ipynb                      # raw crime counts, outlier count detection
-│   └── pstation_collection.ipynb                   # police station collection
+│   ├── 01_load_data.ipynb              # Reads LSOA/crime CSVs and saves to DB
+│   ├── 02_clean_street_crimes.ipynb    # Drops rows, remaps crime types, checks for missing LSOAs
+│   ├── 03_clean_other_tables.ipynb     # month_info table, lsoa_demographics, lsoa_info
+│   ├── 04_derived_attributes.ipynb     # Rolling averages, diff, and spatial lag features
+│   ├── 05_prelim_graphs.ipynb          # Raw crime counts, outlier detection
+│   └── pstation_collection.ipynb       # Police station data collection
 │
 ├── retired/                           # Old code not ready to be deleted
 ├── .gitignore                         # Files/folders to be excluded from Git
 ├── README.md                          # Current document
 ├── requirements.txt                   # Libraries used
-└── test.py                            
+└── test.py 
 ```
-> **Notes:** `police_data.db` must remain in the `data` folder; data not in github because of size
 
-## Environment Setup Instructions
-Create a virtual environment to install packages + dependencies 
+## Data
 
-`conda create -n 4CBL python=3.11 -y`
+The data folder is available at [___]. Place it unchanged into `G8-4CBLW020/`. 
 
-`conda activate 4CBL`
+## Running the Pipeline
 
-`pip install -r requirements.txt`
+**Data pipeline** (England and Wales are separate DBs — run each pair of notebooks for both):
 
-`pip install "anywidget[dev]"`
+1. `Create_weather_dataset.ipynb`
+2. `01_load_data.ipynb` + `01_load_data_Wales.ipynb`
+3. `02_clean_street_crimes.ipynb` + `02_clean_street_crimes_Wales.ipynb`
+4. `03_clean_other_tables.ipynb` + `03_clean_other_tables_Wales.ipynb`
+5. `04_derived_attributes.ipynb` + `04_derived_attributes_Wales.ipynb`
+6. `pstation_collection.ipynb` + `pstation_collection_Wales.ipynb`
 
-==> always use this environment while working on project
-> note: do NOT use pytorch 2.6 b/c of the new security feature (if you do straight pip install torch it'll be 2.6, only use requirements.txt)
+**TFT model:**
 
-## Data Setup + Usage Instructions
+1. `model.py` — find optimal initial learning rate
+2. `train.py` — train the model
+3. `collect_test_predictions.py` — run inference on both England and Wales, writes CSVs to `data/`
+4. `evaluate.py` / `plot_horizon_mae.py` — evaluation and plots (reads from CSVs, no re-inference needed)
 
-The data relevant to all parts of the project is available within ____. Place the data folder unchanged into G8-4CBLW020 File. The following subsection contains the order in which to run the files from start to finish of the recommendation pipeline detailed within the technical report.
+**Allocation:**
 
-data_pipeline/:
-England and Wales are two separate databases already provided within the link above. Each notebook contains high-level summaries on what is done within each file. To run the full data pipeline from scratch the following must be ran:
-1. Create_weather_dataset.ipynb
-2. 01_load_data.ipynb
-3. 01_load_data_Wales.ipynb
-4. 02_clean_street_crimes.ipynb
-5. 02_clean_street_crimes_Wales.ipynb
-6. 03_clean_other_tables.ipynb
-7. 03_clean_other_tables_Wales.ipynb
-8. 04_derived_attributes.ipynb
-9. 04_derived_attributes_Wales.ipynb
-10. pstation_collection.ipynb
-11. pstation_collection_Wales.ipynb
-
-crime_forecasting_tft/:
-1. model.py -> obtain optimal initial learning rate
-2. train.py -> begin training
-3. collect_test_predictions.py -> collect final inference on both England and Wales
-
-allocation/:
-1. 01_load_data.ipynb
-2. 02_workforce_capacity.ipynb
-3. 03_allocation_v1.ipynb
-
-
-## TFT Info
-
-`config.py` contains all configuration steps (batch size, seed, prediction length, etc)
-
-`data_loader.py` contains loading all data into dataframe (getting raw data out of sqlite db)
-
-`preprocessing.py` compute time index, ensure all cols in correct data format, null handling (format for pytorch)
-
-`dataset.py` TimeSeriesDataSet + DataLoaders
-
-`model.py` architecture 
-
-`train.py` imports all functions from files and runs in order to train model
-
-`evaluate.py` evaluation scripts
-
-
-
-
+1. `01_load_data.ipynb`
+2. `02_workforce_capacity.ipynb`
+3. `03_allocation_v1.ipynb`
