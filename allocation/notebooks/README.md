@@ -40,6 +40,6 @@ The CSV files in `outputs/` are generated results for sharing and checking. They
 
 Current uncertainty thresholds:
 
-- raw q25-q75 width divided by raw q50 demand is at least `1.25`
+- raw q75-q25 width divided by raw q50 demand is at least `1.25`
 - raw month-to-month q50 demand change is at least `10%`
 - raw absolute q50 demand change is at least `2`
