@@ -17,9 +17,11 @@ pip install "anywidget[dev]"
 
 ```
 ├── allocation/
-│   ├── 01_load_data.ipynb
-│   ├── 02_workforce_capacity.ipynb
-│   └── 03_allocation_v1.ipynb
+│   ├── 00_build_allocation_inputs.ipynb      # Builds allocation_model.db from source files
+│   ├── 01_load_data.ipynb                    # Prepares forecast demand, geography, rurality, and crime weights
+│   ├── 02_workforce_capacity.ipynb           # Prepares Local policing workforce capacity
+│   ├── 03_allocation.ipynb                   # Runs the final allocation model
+│   └── 04_allocation_pressure_review.ipynb   # Adds the low allocation pressure flag
 │
 ├── crime_forecasting_tft/
 │   ├── config.py                       # Batch size, seed, prediction length, etc.
@@ -33,10 +35,20 @@ pip install "anywidget[dev]"
 │   └── tbd
 │
 ├── data/
-│   ├── raw/
-│   │   ├── 2025_all_iod_scores_ranks_deciles.csv
-│   │   └── uk_police_downloads/
-│   └── police_data.db 
+│   ├── 2025_all_iod_scores_ranks_deciles.csv
+│   ├── uk_police_downloads/
+│   ├── police_data.db
+│   ├── wales_data.db
+│   ├── allocation_model.db
+│   ├── english_predictions.csv
+│   ├── welsh_predictions.csv
+│   ├── cchi_group_average.csv
+│   ├── PCD_OA21_LSOA21_MSOA21_LAD_MAY25_UK_LU.csv
+│   ├── Rural_Urban_Classification_(2021)_of_LSOAs_in_EW.csv
+│   ├── sapemsoaquinaryage20222024.xlsx
+│   ├── open-data-table-police-workforce-functions-280126.ods
+│   ├── final_allocation.csv
+│   └── fte_resources.csv
 │
 ├── data_pipeline/
 │   ├── 01_load_data.ipynb              # Reads LSOA/crime CSVs and saves to DB
@@ -55,7 +67,9 @@ pip install "anywidget[dev]"
 
 ## Data
 
-The data folder is available at [https://tuenl-my.sharepoint.com/:f:/g/personal/a_bekesi_student_tue_nl/IgAwp8xMiJRlR5tPSwWYgYh2AXXqx2UuGWakbt29Lwx6FZo?e=8DEoEp]. Place it unchanged into `G8-4CBLW020/`. 
+The data folder is available at [https://tuenl-my.sharepoint.com/:f:/g/personal/a_bekesi_student_tue_nl/IgAwp8xMiJRlR5tPSwWYgYh2AXXqx2UuGWakbt29Lwx6FZo?e=8DEoEp]. Place it unchanged into `G8-4CBLW020/`.
+
+The allocation model expects its source files and outputs directly in `data/`. The allocation notebooks create or update `allocation_model.db`, `final_allocation.csv`, and `fte_resources.csv`.
 
 ## Running the Pipeline
 
@@ -75,8 +89,10 @@ The data folder is available at [https://tuenl-my.sharepoint.com/:f:/g/personal/
 3. `collect_test_predictions.py` — run inference on both England and Wales, writes CSVs to `data/`
 4. `evaluate.py` / `plot_horizon_mae.py` — evaluation and plots (reads from CSVs, no re-inference needed)
 
-**Allocation:**
+**Allocation**
 
-1. `01_load_data.ipynb`
-2. `02_workforce_capacity.ipynb`
-3. `03_allocation_v1.ipynb`
+1. `00_build_allocation_inputs.ipynb` — builds `allocation_model.db` from the source files in `data/`
+2. `01_load_data.ipynb` — prepares demand, MSOA context, and crime weights
+3. `02_workforce_capacity.ipynb` — prepares Local policing FTE capacity
+4. `03_allocation.ipynb` — runs the allocation and writes `final_allocation.csv` and `fte_resources.csv`
+5. `04_allocation_pressure_review.ipynb` — adds the low allocation pressure flag to `final_allocation.csv`
