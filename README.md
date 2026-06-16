@@ -34,11 +34,7 @@ pip install "anywidget[dev]"
 │   ├── collect_test_predictions.py     # Runs inference and writes predictions to CSV
 │   └── tbd
 │
-├── data/
-│   ├── raw/
-│   │   ├── 2025_all_iod_scores_ranks_deciles.csv
-│   │   └── uk_police_downloads/
-│   └── police_data.db 
+├── data/                               # Data from OneDrive Folder
 │
 ├── data_pipeline/
 │   ├── 01_load_data.ipynb              # Reads LSOA/crime CSVs and saves to DB
