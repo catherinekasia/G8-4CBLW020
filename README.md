@@ -84,3 +84,9 @@ The data folder is available at [https://tuenl-my.sharepoint.com/:f:/g/personal/
 3. `02_workforce_capacity.ipynb` — prepares Local policing FTE capacity
 4. `03_allocation.ipynb` — runs the allocation and writes `msoa_allocation.csv` and `fte_resources.csv`
 5. `04_allocation_pressure_review.ipynb` — adds the low allocation pressure flag to `msoa_allocation.csv`
+
+## Tutorials Used
+Outside of documentation, the following tutorials have also been used assist in writing the code within the repo:
+1. [https://darribas.org/gds_course/content/bE/lab_E.html#data]
+2. [https://pytorch-forecasting.readthedocs.io/en/stable/tutorials/stallion.html]
+3. [https://towardsdatascience.com/ipyleaflet-interactive-mapping-in-jupyter-notebook-994f19611e79/]
