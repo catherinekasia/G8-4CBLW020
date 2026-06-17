@@ -84,6 +84,9 @@ The data folder is available at [https://tuenl-my.sharepoint.com/:f:/g/personal/
 4. `03_allocation.ipynb` — runs the allocation and writes `msoa_allocation.csv` and `fte_resources.csv`
 5. `04_allocation_pressure_review.ipynb` — adds the low allocation pressure flag to `msoa_allocation.csv`
 
+**Dashboardd**
+1. `dashboard.ipynb` - loads the dashboard
+
 ## Tutorials Used
 Outside of documentation, the following tutorials have also been used assist in writing the code within the repo:
 1. [https://darribas.org/gds_course/content/bE/lab_E.html#data]
