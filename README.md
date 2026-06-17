@@ -34,6 +34,9 @@ pip install "anywidget[dev]"
 │   ├── collect_test_predictions.py     # Runs inference and writes predictions to CSV
 │   └── tbd
 │
+├── dashboard/
+│   └── dashboard.ipynb                 # Runs dashboard inside the notebook
+│
 ├── data/                               # Data from OneDrive Folder
 │
 ├── data_pipeline/
