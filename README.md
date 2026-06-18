@@ -45,7 +45,8 @@ pip install "anywidget[dev]"
 │   ├── 03_clean_other_tables.ipynb     # month_info table, lsoa_demographics, lsoa_info
 │   ├── 04_derived_attributes.ipynb     # Rolling averages, diff, and spatial lag features
 │   ├── 05_prelim_graphs.ipynb          # Raw crime counts, outlier detection
-│   └── pstation_collection.ipynb       # Police station data collection
+|   ├── Create_weather_dataset.ipynb    # Weather data collection
+│   └── pstation_collection.ipynb       # Police station data collection   
 │
 ├── retired/                           # Old code not ready to be deleted
 ├── .gitignore                         # Files/folders to be excluded from Git
