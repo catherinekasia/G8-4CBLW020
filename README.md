@@ -57,7 +57,9 @@ pip install "anywidget[dev]"
 
 ## Data
 
-The data folder is available at [https://tuenl-my.sharepoint.com/:f:/g/personal/a_bekesi_student_tue_nl/IgAwp8xMiJRlR5tPSwWYgYh2AXXqx2UuGWakbt29Lwx6FZo?e=8DEoEp]. Place it unchanged into `G8-4CBLW020/`.
+The data folder for all derived/created datasets is available at [https://tuenl-my.sharepoint.com/:f:/g/personal/a_bekesi_student_tue_nl/IgAwp8xMiJRlR5tPSwWYgYh2AXXqx2UuGWakbt29Lwx6FZo?e=8DEoEp].  The original raw archive data is unavailable within the OneDrive folder, however it is downloadable via [https://data.police.uk/data/archive/]. Download all data and place it within the same data folder as the OneDrive data is in.
+
+Once the data folder is complete, place it unchanged into `G8-4CBLW020/`.
 
 ## Running the Pipeline
 
